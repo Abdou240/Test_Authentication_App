@@ -1,0 +1,10 @@
+FROM python:3.9-slim  
+
+WORKDIR /app  # Set the working directory
+
+COPY requirements.txt ./  
+RUN pip install --no-cache-dir -r requirements.txt  # Install required packages
+
+COPY . .  
+
+CMD ["python", "./authentication_test.py"]  # Set the default command

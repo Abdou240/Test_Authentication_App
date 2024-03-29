@@ -1,0 +1,55 @@
+version: "3.9"
+
+networks:
+  lite_demo-net:
+
+services:
+  test_api:
+    image: datascientest/fastapi:1.0.0
+    container_name: test_api
+    hostname: fastapi
+    networks:
+      - lite_demo-net
+    ports:
+      - target: 8000
+        published: 8000
+
+  test_authentification:
+    depends_on:
+      test_api:
+        condition: service_started
+    image: authentication_test:latest
+    container_name: test_authentification
+    networks:
+      - lite_demo-net
+    environment: # Environment variable for test_authentification
+      LOG: 1
+    tty: true
+    volumes:
+      - "./log:/app/log"
+  test_authorization:
+    depends_on:
+      test_api:
+        condition: service_started
+    image: authorization_test:latest
+    container_name: test_authorization
+    networks:
+      - lite_demo-net
+    environment: # Environment variable for test_authentification
+      LOG: 1
+    tty: true
+    volumes:
+      - "./log:/app/log"
+  test_content:
+    depends_on:
+      test_api:
+        condition: service_started
+    image: content_test:latest
+    container_name: test_content
+    networks:
+      - lite_demo-net
+    environment: # Environment variable for test_authentification
+      LOG: 1
+    tty: true
+    volumes:
+      - "./log:/app/log"
